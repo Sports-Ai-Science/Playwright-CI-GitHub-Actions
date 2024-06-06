@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import sync_playwright
-from pages.google_page import GooglePage
+from pages.google_page.py import GooglePage
 
 @pytest.fixture(scope="session")
 def browser():
