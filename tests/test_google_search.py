@@ -5,6 +5,6 @@ from pages.google_page import GooglePage
 def test_google_search(page: Page):
     google_page = GooglePage(page)
     google_page.navigate()
-    google_page.search("Playwright Python")
+    google_page.search("Playwright Python２")
     
     assert "https://www.google.com/search?" in page.url
