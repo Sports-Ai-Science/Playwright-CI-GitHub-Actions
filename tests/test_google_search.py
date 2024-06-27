@@ -6,7 +6,7 @@ def test_google(page: Page):
     google_page = GooglePage(page)
     google_page.navigate()
     
-    assert "https://www.google.com/" == page.url
+    assert "https://www.google.coma/" == page.url
 
 
 def test_google_search(page: Page):
