@@ -48,3 +48,16 @@ jobs:
       with:
         name: playwright-traces
         path: test-results/
+
+    # Run automated tests and report results to Testmo
+    - run: |
+        npx testmo automation:run:submit \
+          --instance "$TESTMO_URL" \
+          --project-id 1 \
+          --name "Test run" \
+          --source "frontend" \
+          --resources resources.json \
+          --results test-results/*.xml
+      env:
+        TESTMO_URL: ${{ secrets.TESTMO_URL }}
+        TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
