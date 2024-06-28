@@ -13,10 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 19
-        cache: npm
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -30,6 +26,9 @@ jobs:
 
     - name: Ensure browsers are installed
       run: python -m playwright install --with-deps
+
+    # Install Testmo CLI tool locally (then use npx testmo .. to run it)
+    - run: npm install --no-save @testmo/testmo-cli
 
     - name: Run your tests
       run: |
