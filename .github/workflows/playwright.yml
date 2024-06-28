@@ -56,7 +56,6 @@ jobs:
           --project-id 1 \
           --name "Test run" \
           --source "frontend" \
-          --resources resources.json \
           --results test-results/*.xml
       env:
         TESTMO_URL: ${{ secrets.TESTMO_URL }}
