@@ -58,7 +58,7 @@ jobs:
         npx testmo automation:run:submit \
           --instance "$TESTMO_URL" \
           --project-id 1 \
-          --name "CICD" \
+          --name CICD-${{ matrix.browser }} \
           --source "functiontest" \
           --results test-results/*.xml
       env:
