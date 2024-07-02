@@ -9,13 +9,13 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
 
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
         os: [windows-latest, ubuntu-latest]
-        
+    runs-on: ${{ matrix.os }}
+    
     steps:
     - uses: actions/checkout@v4
 
