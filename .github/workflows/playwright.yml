@@ -37,14 +37,14 @@ jobs:
     - name: Run your tests
       run: |
         mkdir -p test-results
-        pytest --browser ${{ matrix.browser }} --junitxml=test-results/results.xml --tracing=retain-on-failure 
+        pytest --browser ${{ matrix.browser }} --junitxml=test-results/${{ matrix.browser }}_results.xml --tracing=retain-on-failure 
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
-        path: test-results/results.xml
+        path: test-results/${{ matrix.browser }}_results.xml
 
     - name: Upload Playwright traces
       uses: actions/upload-artifact@v4
