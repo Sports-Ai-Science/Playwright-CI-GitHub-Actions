@@ -56,16 +56,16 @@ jobs:
 
     # report results to Testmo
     - run: |
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then 
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
           npx testmo automation:run:submit \
             --instance "$TESTMO_URL" \
             --project-id 1 \
             --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
             --source "functiontest" \
             --results test-results/*.xml
-        if [ "${{ matrix.os }}" == "windows-latest" ]; then 
+        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
           testmo automation:run:submit --instance "$TESTMO_URL" --project-id 1 --name CICD-${{ matrix.os }}_${{ matrix.browser }} --source "functiontest" --results results/*.xml
-
+        fi
       env:
         TESTMO_URL: ${{ secrets.TESTMO_URL }}
         TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
