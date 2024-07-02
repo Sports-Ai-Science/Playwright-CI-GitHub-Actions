@@ -63,7 +63,7 @@ jobs:
             --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
             --source "functiontest" \
             --results test-results/*.xml
-        else if [ "${{ matrix.os }}" == "windows-latest" ]; then 
+        if [ "${{ matrix.os }}" == "windows-latest" ]; then 
           testmo automation:run:submit --instance "$TESTMO_URL" --project-id 1 --name CICD-${{ matrix.os }}_${{ matrix.browser }} --source "functiontest" --results results/*.xml
 
       env:
