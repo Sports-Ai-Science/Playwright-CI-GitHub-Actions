@@ -50,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-traces
+        name: ${{ matrix.browser }}playwright-traces
         path: test-results/
 
     # report results to Testmo
