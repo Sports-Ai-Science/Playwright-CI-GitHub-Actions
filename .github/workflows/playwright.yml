@@ -54,18 +54,28 @@ jobs:
         name: ${{ matrix.os }}_${{ matrix.browser }}_playwright-traces
         path: test-results/
 
-    # report results to Testmo
-    - run: |
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          npx testmo automation:run:submit \
-            --instance "$TESTMO_URL" \
-            --project-id 1 \
-            --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
-            --source "functiontest" \
-            --results test-results/*.xml
-        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-          testmo automation:run:submit --instance "$TESTMO_URL" --project-id 1 --name CICD-${{ matrix.os }}_${{ matrix.browser }} --source "functiontest" --results results/*.xml
-        fi
+    - name: report results to Testmo (Linux and macOS)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      run: |
+        npx testmo automation:run:submit \
+          --instance "$TESTMO_URL" \
+          --project-id 1 \
+          --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
+          --source "functiontest" \
+          --results test-results/*.xml
       env:
         TESTMO_URL: ${{ secrets.TESTMO_URL }}
         TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
+
+    
+    # report results to Testmo
+    - name: report results to Testmo (Windows)
+      if: runner.os == 'Windows'
+      run: |
+          testmo automation:run:submit --instance "$TESTMO_URL" --project-id 1 --name CICD-${{ matrix.os }}_${{ matrix.browser }} --source "functiontest" --results results/*.xml
+      shell: pwsh
+      env:
+        TESTMO_URL: ${{ secrets.TESTMO_URL }}
+        TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
+
+  
