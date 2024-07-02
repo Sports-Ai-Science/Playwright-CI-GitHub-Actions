@@ -38,20 +38,20 @@ jobs:
     - name: Run your tests
       run: |
         mkdir -p test-results
-        pytest --browser ${{ matrix.browser }} --junitxml=test-results/${{ matrix.browser }}_results.xml --tracing=retain-on-failure 
+        pytest --browser ${{ matrix.browser }} --junitxml=test-results/${{ matrix.os }}_${{ matrix.browser }}_results.xml --tracing=retain-on-failure 
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ${{ matrix.browser }}_test-results
-        path: test-results/${{ matrix.browser }}_results.xml
+        name: ${{ matrix.os }}_${{ matrix.browser }}_test-results
+        path: test-results/${{ matrix.os }}_${{ matrix.browser }}_results.xml
 
     - name: Upload Playwright traces
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ${{ matrix.browser }}_playwright-traces
+        name: ${{ matrix.os }}_${{ matrix.browser }}_playwright-traces
         path: test-results/
 
     # report results to Testmo
@@ -59,7 +59,7 @@ jobs:
         npx testmo automation:run:submit \
           --instance "$TESTMO_URL" \
           --project-id 1 \
-          --name CICD-${{ matrix.browser }} \
+          --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
           --source "functiontest" \
           --results test-results/*.xml
       env:
