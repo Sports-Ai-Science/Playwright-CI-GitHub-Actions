@@ -37,7 +37,7 @@ jobs:
     - name: Run your tests
       run: |
         mkdir -p test-results
-        pytest --junitxml=test-results/results.xml --tracing=retain-on-failure
+        pytest --browser ${{ matrix.browser }} --junitxml=test-results/results.xml --tracing=retain-on-failure 
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
