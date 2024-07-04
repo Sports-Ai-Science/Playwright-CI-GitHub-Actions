@@ -9,13 +9,8 @@ on:
 jobs:
   test:
     timeout-minutes: 60
+    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-        os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    
     steps:
     - uses: actions/checkout@v4
 
@@ -30,7 +25,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Ensure browsers are installed
-      run: python -m playwright install --with-deps ${{ matrix.browser }}
+      run: python -m playwright install --with-deps
 
     # Install Testmo CLI tool locally (then use npx testmo .. to run it)
     - run: npm install --no-save @testmo/testmo-cli
@@ -38,44 +33,30 @@ jobs:
     - name: Run your tests
       run: |
         mkdir -p test-results
-        pytest --browser ${{ matrix.browser }} --junitxml=test-results/${{ matrix.os }}_${{ matrix.browser }}_results.xml --tracing=retain-on-failure 
+        pytest --junitxml=test-results/results.xml --tracing=retain-on-failure
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ${{ matrix.os }}_${{ matrix.browser }}_test-results
-        path: test-results/${{ matrix.os }}_${{ matrix.browser }}_results.xml
+        name: test-results
+        path: test-results/results.xml
 
     - name: Upload Playwright traces
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ${{ matrix.os }}_${{ matrix.browser }}_playwright-traces
+        name: playwright-traces
         path: test-results/
 
-    - name: report results to Testmo (Linux and macOS)
-      if: runner.os == 'Linux' || runner.os == 'macOS'
-      run: |
+    # Run automated tests and report results to Testmo
+    - run: |
         npx testmo automation:run:submit \
           --instance "$TESTMO_URL" \
           --project-id 1 \
-          --name CICD-${{ matrix.os }}_${{ matrix.browser }} \
+          --name "CICD" \
           --source "functiontest" \
           --results test-results/*.xml
       env:
         TESTMO_URL: ${{ secrets.TESTMO_URL }}
         TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
-
-    
-    # report results to Testmo
-    - name: report results to Testmo (Windows)
-      if: runner.os == 'Windows'
-      run: |
-          testmo automation:run:submit --instance "$TESTMO_URL" --project-id 1 --name CICD-${{ matrix.os }}_${{ matrix.browser }} --source "functiontest" --results results/*.xml
-      shell: pwsh
-      env:
-        TESTMO_URL: ${{ secrets.TESTMO_URL }}
-        TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
-
-  
