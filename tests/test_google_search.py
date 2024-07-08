@@ -14,4 +14,4 @@ def test_google_search(page: Page):
     google_page.navigate()
     google_page.search("Playwright Python")
     
-    assert "https://www.google.com/search?" in page.url
+    assert "https://www.google.com/serch?" in page.url
